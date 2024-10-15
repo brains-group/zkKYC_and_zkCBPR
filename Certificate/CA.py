@@ -51,14 +51,14 @@ root_cert = x509.CertificateBuilder().subject_name(
 ).sign(root_key, hashes.SHA256())
 
 # Save the root CA's private key and certificate to files
-with open("/Users/kaiyang/Documents/kyc/Certificate/root_key.pem", "wb") as f:
+with open("/..../Certificate/root_key.pem", "wb") as f:
     f.write(root_key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.TraditionalOpenSSL,
         encryption_algorithm=serialization.NoEncryption(), 
     ))
 
-with open("/Users/kaiyang/Documents/kyc/Certificate/root_cert.pem", "wb") as f:
+with open("/..../Certificate/root_cert.pem", "wb") as f:
     f.write(root_cert.public_bytes(serialization.Encoding.PEM))
 
 print("Root CA certificate and private key have been generated and saved to root_key.pem and root_cert.pem")

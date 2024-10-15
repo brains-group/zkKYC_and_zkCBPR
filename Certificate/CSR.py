@@ -55,7 +55,7 @@ csr = x509.CertificateSigningRequestBuilder().subject_name(x509.Name([
 
 # Serialize the CSR to PEM format and save to a file
 csr_pem = csr.public_bytes(serialization.Encoding.PEM)
-csr_file_path = "/Users/kaiyang/Documents/kyc/Certificate/csr.pem"
+csr_file_path = "/..../Certificate/csr.pem"
 
 with open(csr_file_path, "wb") as f:
     f.write(csr_pem)

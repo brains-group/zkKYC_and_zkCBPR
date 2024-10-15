@@ -74,7 +74,7 @@ async function generateMerkleTree(inputs) {
 
 (async () => {
     // Read the JSON file containing transaction data
-    const transactionFilePath = '/Users/kaiyang/Documents/kyc/Merkle_tree/transactions.json';
+    const transactionFilePath = '/..../Merkle_tree/transactions.json';
     const transactionData = JSON.parse(fs.readFileSync(transactionFilePath, 'utf-8'));
 
     // Extract and format inputs from the transaction data
@@ -96,12 +96,12 @@ async function generateMerkleTree(inputs) {
         pathIndices
     };
     
-    const filePath = path.join('/Users/kaiyang/Documents/kyc/Circuits/zkMerkleTree', 'input.json');
+    const filePath = path.join('/..../Circuits/zkMerkleTree', 'input.json');
     fs.writeFileSync(filePath, JSON.stringify(circuitInput, null, 2));
 
     console.log(`Circuit input generated and saved to ${filePath}`);
 
-    const rootFilePath = path.join('/Users/kaiyang/Documents/kyc/Circuits/zkMerkleTree', 'merkleRoot.json');
+    const rootFilePath = path.join('/..../Circuits/zkMerkleTree', 'merkleRoot.json');
     fs.writeFileSync(rootFilePath, JSON.stringify({ merkleRoot: root }, null, 2));
 
     console.log(`Merkle root saved to ${rootFilePath}`);

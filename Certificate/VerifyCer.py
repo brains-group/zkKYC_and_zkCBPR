@@ -3,15 +3,15 @@ from cryptography.x509.verification import PolicyBuilder, Store, VerificationErr
 from datetime import datetime, timezone
 
 # Load the root CA certificate
-with open("/Users/kaiyang/Documents/kyc/Certificate/root_cert.pem", "rb") as f:
+with open("/..../Certificate/root_cert.pem", "rb") as f:
     root_cert = load_pem_x509_certificate(f.read())
 
 # Load the bank's intermediate CA certificate
-with open("/Users/kaiyang/Documents/kyc/Certificate/int_cert.pem", "rb") as f:
+with open("/..../Certificate/int_cert.pem", "rb") as f:
     int_cert = load_pem_x509_certificate(f.read())
 
 # Load the user certificate
-with open("/Users/kaiyang/Documents/kyc/Certificate/user_cert.pem", "rb") as f:
+with open("/..../Certificate/user_cert.pem", "rb") as f:
     user_cert = load_pem_x509_certificate(f.read())
 
 # Create a certificate store and add the root CA and intermediate CA certificates to it

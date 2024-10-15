@@ -417,25 +417,23 @@
     })
     .then(response => response.json())
     .then(data => {
-      // 显示解码后的 CSR 信息
       document.getElementById('decodeOutput').innerText = `Transaction Info: ${JSON.stringify(data.decodedInfo, null, 2)}`;
       
-      // 解码成功后启用签名按钮
       document.getElementById('signCSRButton').disabled = false;
     })
     .catch(err => {
-      document.getElementById('decodeOutput').innerText = `解码失败: ${err.message}`;
+      document.getElementById('decodeOutput').innerText = `decode fail: ${err.message}`;
     });
   });
 
-    // 处理签名 CSR
+
 document.getElementById('signCSRButton').addEventListener('click', function() {
   fetch('/sign-csr', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ csrPath: generatedCSRPath }) // 将 CSR 的路径发送到后端
+    body: JSON.stringify({ csrPath: generatedCSRPath }) 
   })
   .then(response => response.json())
   .then(data => {

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = '/Users/kaiyang/Documents/kyc/Merkle_tree/transactions.json';
+const path = '/..../Merkle_tree/transactions.json';
 
 // Transaction data to be added
 const newTransaction = {

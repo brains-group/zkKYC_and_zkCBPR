@@ -5,90 +5,83 @@ const { parseEther } = require('ethers')
 const { exec } = require('child_process');
 const fs = require('fs');
 const { createDidJWT } = require('./DIDs/create_jwt'); 
-const MerkleTreeWithDID = require('./ContractABI/MerkleTreeWithDID.json'); // 合约 ABI
-const TransferFundsContractABI =require('./ContractABI/CBPRPaymentSystem.json')
+const MerkleTreeWithDID = require('./ContractABI/MerkleTreeWithDID.json');
+const TransferFundsContractABI =require('./ContractABI/CBPRPaymentSystem.json');
+const { sign } = require('crypto');
 const app = express();
-app.use(express.json()); // 解析 JSON 数据
+app.use(express.json()); 
 
 // Serve static files like app.html
 app.use(express.static(__dirname));
 
-// 连接到 Anvil 测试网
-const provider = new ethers.JsonRpcProvider('http://127.0.0.1:8545');
-const CAprivateKey = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'; // CA 的私钥
+// conect Anvil 
+const provider = new ethers.JsonRpcProvider('local host');
+const CAprivateKey = 'Your Fist CA private key'; // CA private key
 const caWallet = new ethers.Wallet(CAprivateKey, provider);
 
-const intermediateprivateKey = '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d'; // CA 的私钥
+const intermediateprivateKey = ' private key for IE'; 
 const intermediateWallet = new ethers.Wallet(intermediateprivateKey, provider); // Intermediate wallet (address 1)
 
-const debtorprivateKey = '0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a'; 
+const debtorprivateKey = 'private key for debtor bank'; 
 const debtorWallet = new ethers.Wallet(debtorprivateKey, provider); 
 
-const intermediarybankprivateKey = '0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6'; 
+const intermediarybankprivateKey = 'private keyfor Intermediary bank'; 
 const intermeediarybankWallet = new ethers.Wallet(intermediarybankprivateKey, provider); 
 
-const creditorbankprivateKey = '0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a'; 
+const creditorbankprivateKey = 'Private key for creditor bank'; 
 const creditorbankWallet = new ethers.Wallet(creditorbankprivateKey, provider); 
 
-// 设置合约地址
-const merkleContractAddress =  '0x5FbDB2315678afecb367f032d93F642f64180aa3'; // 确保在这里输入你部署的合约地址
+const merkleContractAddress =  'Contract address'; // Address of the MerkleTreeWithDID Contract
 const contractCA = new ethers.Contract(merkleContractAddress, MerkleTreeWithDID.abi, caWallet);
 const contractIntermediate = new ethers.Contract(merkleContractAddress, MerkleTreeWithDID.abi, intermediateWallet);
 
-const transferContractAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'; // Address of the TransferFunds contract
+const transferContractAddress = 'Contract address'; // Address of the TransferFunds contract
 const debtorContract = new ethers.Contract(transferContractAddress, TransferFundsContractABI.abi, debtorWallet); // Transfer contract (Intermediate wallet)
 const intermediarybankContract = new ethers.Contract(transferContractAddress, TransferFundsContractABI.abi, intermeediarybankWallet); // Transfer contract (Intermediate wallet)
 const creditorbankContract = new ethers.Contract(transferContractAddress, TransferFundsContractABI.abi, creditorbankWallet); // Transfer contract (Intermediate wallet)
 
 
 
-// 生成 DID 的端点
 app.post('/generate-did', async (req, res) => {
   const { realName, realID, additionalInfo } = req.body;
   try {
-    // 调用生成 DID 的逻辑
     const did = await createDidJWT(realName, realID, additionalInfo);
-    // 将生成的 DID 发送回前端
     res.json({ did });
   } catch (error) {
-    console.error('生成 DID 时出错:', error);
-    res.status(500).json({ error: '生成 DID 失败' });
+    console.error('fail', error);
+    res.status(500).json({ error: 'fail' });
   }
 });
 
-// 注册 DID 的端点
 app.post('/register-did', async (req, res) => {
-  const { did } = req.body; // 从请求体中获取 DID
+  const { did } = req.body;
   try {
-    // 调用智能合约的 registerDID 方法
     const tx = await contractCA.registerDID(did);
     await tx.wait();
     res.json({ txHash: tx.hash });
   } catch (error) {
-    console.error('注册 DID 时出错:', error);
-    res.status(500).json({ error: '注册 DID 失败' });
+    console.error('fail', error);
+    res.status(500).json({ error: 'fail' });
   }
 });
 
-// 添加中介的端点
 app.post('/add-intermediate', async (req, res) => {
-  const { intermediateAddress } = req.body; // 从请求体中获取中介地址
+  const { intermediateAddress } = req.body; 
   try {
-    // 调用智能合约的 addIntermediate 方法
     const tx = await contractCA.addIntermediate(intermediateAddress);
     await tx.wait();
     res.json({ txHash: tx.hash });
   } catch (error) {
-    console.error('添加中介时出错:', error);
-    res.status(500).json({ error: '添加中介失败' });
+    console.error('fail:', error);
+    res.status(500).json({ error: 'fail' });
   }
 });
 
-const csrScriptPath = '/Users/kaiyang/Documents/kyc/Certificate/CSR.py';
+const csrScriptPath = '/..../Certificate/CSR.py';
 app.post('/generate-csr', (req, res) => {
   const { debtor_DID, debtor_bank, debtor_wallet_addresses, transaction_wallet_address, creditor_bank } = req.body;
   // Full path to the csr.pem file
-  const csrFilePath = '/Users/kaiyang/Documents/kyc/Certificate/csr.pem';
+  const csrFilePath = '/..../Certificate/csr.pem';
   // Construct the command with the full path to CSR.py and the necessary arguments
   const command = `python3 "${csrScriptPath}" "${debtor_DID}" "${debtor_bank}" "${debtor_wallet_addresses}" "${transaction_wallet_address}" "${creditor_bank}"`;
   // Execute the Python script
@@ -103,44 +96,38 @@ app.post('/generate-csr', (req, res) => {
 });
 
 app.post('/decode-csr', (req, res) => {
-  const csrFilePath = '/Users/kaiyang/Documents/kyc/Certificate/csr.pem'; // CSR 文件的路径
-  const decodeCsrScriptPath = '/Users/kaiyang/Documents/kyc/Certificate/Decode_CSR.py'; // Decode_CSR.py 的路径
-
-  // 确保使用 python3 来执行 Python 脚本
+  const csrFilePath = '/..../Certificate/csr.pem'; // CSR file path
+  const decodeCsrScriptPath = '/..../Certificate/Decode_CSR.py'; // Decode_CSR.py 
   const command = `python "${decodeCsrScriptPath}" "${csrFilePath}"`;
 
   exec(command, (error, stdout, stderr) => {
     if (error) {
-      console.error(`执行解码时出错: ${error.message}`);
-      return res.status(500).json({ error: '解码 CSR 失败' });
+      console.error(`fail: ${error.message}`);
+      return res.status(500).json({ error: 'fal' });
     }
-
-    // 调试：打印 Python 脚本的输出
     console.log('stdout:', stdout);
     console.log('stderr:', stderr);
 
-    // 返回解码后的信息到前端
     try {
-      const decodedInfo = JSON.parse(stdout); // 确保 Python 输出是有效的 JSON
+      const decodedInfo = JSON.parse(stdout); 
       res.json({ decodedInfo });
     } catch (parseError) {
-      console.error('解析 JSON 失败:', parseError);
-      res.status(500).json({ error: '解析解码后的 CSR 信息失败' });
+      console.error('fail:', parseError);
+      res.status(500).json({ error: 'fail' });
     }
   });
 });
 
 app.post('/sign-csr', (req, res) => {
-  const csrPath = req.body.csrPath || '/Users/kaiyang/Documents/kyc/Certificate/csr.pem'; // CSR 文件的路径
-  const signCsrScriptPath = '/Users/kaiyang/Documents/kyc/Certificate/Sign_CSR.py'; // 签名脚本路径
+  const csrPath = req.body.csrPath || '/..../Certificate/csr.pem'; // CSR 
+  const signCsrScriptPath = '/..../Certificate/Sign_CSR.py';
 
-  // 执行签名脚本
   const command = `python3 "${signCsrScriptPath}" "${csrPath}"`;
   
   exec(command, (error, stdout, stderr) => {
     if (error) {
-      console.error(`签名 CSR 时出错: ${error.message}`);
-      return res.status(500).json({ error: '签名 CSR 失败' });
+      console.error(`fail: ${error.message}`);
+      return res.status(500).json({ error: 'fail' });
     }
 
     console.log("Signing sucess", stdout);
@@ -150,7 +137,7 @@ app.post('/sign-csr', (req, res) => {
 
 app.post('/generate-merkle-root', (req, res) => {
   // Path to the merkleTree.js script
-  const merkleScriptPath = '/Users/kaiyang/Documents/kyc/Merkle_tree/merkleTree.js';
+  const merkleScriptPath = '/..../Merkle_tree/merkleTree.js';
 
   // Execute the script to generate the Merkle Tree root and circuit input
   exec(`node ${merkleScriptPath}`, (error, stdout, stderr) => {
@@ -160,7 +147,7 @@ app.post('/generate-merkle-root', (req, res) => {
     }
 
     // Read the Merkle root from the saved file
-    const rootFilePath = '/Users/kaiyang/Documents/kyc/Circuits/zkMerkleTree/merkleRoot.json';
+    const rootFilePath = '/..../Circuits/zkMerkleTree/merkleRoot.json';
     const merkleRootData = JSON.parse(fs.readFileSync(rootFilePath, 'utf-8'));
 
     res.json({ merkleRoot: merkleRootData.merkleRoot }); // Send the root back to the frontend
@@ -311,13 +298,13 @@ app.post('/intermediary-transfer', async (req, res) => {
 });
 
 const filePaths = [
-  "/Users/kaiyang/Documents/kyc/Circuits/Debtor_Bank_zkp/verification_key.json",
-  "/Users/kaiyang/Documents/kyc/Circuits/Debtor_Bank_zkp/public.json",
-  "/Users/kaiyang/Documents/kyc/Circuits/Debtor_Bank_zkp/proof.json",
-  "/Users/kaiyang/Documents/kyc/Circuits/zkMerkleTree/verification_key.json",
-  "/Users/kaiyang/Documents/kyc/Circuits/zkMerkleTree/public.json",
-  "/Users/kaiyang/Documents/kyc/Circuits/zkMerkleTree/proof.json",
-  "/Users/kaiyang/Documents/kyc/Certificate/VerifyCer.py"
+  "/..../Circuits/Debtor_Bank_zkp/verification_key.json",
+  "/..../Circuits/Debtor_Bank_zkp/public.json",
+  "/..../Circuits/Debtor_Bank_zkp/proof.json",
+  "/..../Circuits/zkMerkleTree/verification_key.json",
+  "/..../Circuits/zkMerkleTree/public.json",
+  "/..../Circuits/zkMerkleTree/proof.json",
+  "/..../Certificate/VerifyCer.py"
 ];
 
 // Check if all files exist
@@ -338,7 +325,7 @@ app.post('/check-files', (req, res) => {
 });
 
 app.post('/verify-proofs', (req, res) => {
-  const scriptPath = '/Users/kaiyang/Documents/kyc/test/Intermediate_Verification.sh';  // Path to your shell script
+  const scriptPath = '/..../test/Intermediate_Verification.sh';  // Path to your shell script
 
   exec(`bash ${scriptPath}`, (error, stdout, stderr) => {
       if (error) {
@@ -371,7 +358,7 @@ app.post('/create-transaction', (req, res) => {
     "Creditor_Bank": c_bank
   };
 
-  fs.writeFile('/Users/kaiyang/Documents/kyc/Merkle_tree/CBPRtransaction.json', JSON.stringify(transactionData, null, 4), 'utf8', (err) => {
+  fs.writeFile('/..../Merkle_tree/CBPRtransaction.json', JSON.stringify(transactionData, null, 4), 'utf8', (err) => {
     if (err) {
       console.error('Error writing JSON file:', err);
       return res.status(500).json({ error: 'Failed to create JSON file' });
@@ -383,8 +370,8 @@ app.post('/create-transaction', (req, res) => {
 });
 
 
-const cbprPath = '/Users/kaiyang/Documents/kyc/Merkle_tree/CBPRtransaction.json';
-const transactionsPath = '/Users/kaiyang/Documents/kyc/Merkle_tree/transactions.json';
+const cbprPath = '/..../Merkle_tree/CBPRtransaction.json';
+const transactionsPath = '/..../Merkle_tree/transactions.json';
 
 app.post('/update-transaction', (req, res) => {
     // Read the CBPRtransaction.json

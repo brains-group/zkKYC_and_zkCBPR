@@ -7,14 +7,14 @@ import sys
 
 
 # Load the intermediate CA's private key and certificate from files
-with open("/Users/kaiyang/Documents/kyc/Certificate/int_key.pem", "rb") as f:
+with open("/..../Certificate/int_key.pem", "rb") as f:
     int_key = serialization.load_pem_private_key(f.read(), password=None)
 
-with open("/Users/kaiyang/Documents/kyc/Certificate/int_cert.pem", "rb") as f:
+with open("/..../Certificate/int_cert.pem", "rb") as f:
     int_cert = x509.load_pem_x509_certificate(f.read())
     
 # Load the user's CSR from file
-with open("/Users/kaiyang/Documents/kyc/Certificate/csr.pem", "rb") as f:
+with open("/..../Certificate/csr.pem", "rb") as f:
     user_csr = x509.load_pem_x509_csr(f.read())
 
 # Issue the user's certificate
@@ -59,6 +59,6 @@ user_cert = x509.CertificateBuilder().subject_name(
 ).sign(int_key, hashes.SHA256())
 
 # Save the user's certificate to file
-with open("/Users/kaiyang/Documents/kyc/Certificate/user_cert.pem", "wb") as f:
+with open("/..../Certificate/user_cert.pem", "wb") as f:
     f.write(user_cert.public_bytes(serialization.Encoding.PEM))
 print("Certificate has been generated")

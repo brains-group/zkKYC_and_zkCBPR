@@ -5,10 +5,10 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.x509.oid import NameOID
 
 # Load the root CA's private key and certificate from files
-with open("/Users/kaiyang/Documents/kyc/Certificate/root_key.pem", "rb") as f:
+with open("/..../Certificate/root_key.pem", "rb") as f:
     root_key = serialization.load_pem_private_key(f.read(), password=None)
 
-with open("/Users/kaiyang/Documents/kyc/Certificate/root_cert.pem", "rb") as f:
+with open("/..../Certificate/root_cert.pem", "rb") as f:
     root_cert = x509.load_pem_x509_certificate(f.read())
 
 # Generate the intermediate CA's private key
@@ -63,14 +63,14 @@ int_cert = x509.CertificateBuilder().subject_name(
 ).sign(root_key, hashes.SHA256())
 
 # Save the intermediate CA's private key and certificate to files
-with open("/Users/kaiyang/Documents/kyc/Certificate/int_key.pem", "wb") as f:
+with open("/..../Certificate/int_key.pem", "wb") as f:
     f.write(int_key.private_bytes(
         encoding=serialization.Encoding.PEM,
         format=serialization.PrivateFormat.TraditionalOpenSSL,
         encryption_algorithm=serialization.NoEncryption(),  # Encryption should be used in production environments
     ))
 
-with open("/Users/kaiyang/Documents/kyc/Certificate/int_cert.pem", "wb") as f:
+with open("/..../Certificate/int_cert.pem", "wb") as f:
     f.write(int_cert.public_bytes(serialization.Encoding.PEM))
 
 print("Intermediate CA certificate and private key have been generated and saved to int_key.pem and int_cert.pem")

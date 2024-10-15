@@ -33,10 +33,12 @@ Before proceeding, update the file paths in the following files:
 for example:
 Replace the `....` in the path 
 ```shell
-/..../Circuits/Debtor_Bank_zkp/verification_key.json
+/..../Certificate/root_key.pem
 ```
 with your actual file directory where files are stored.
-
+```shell
+/User/your_root/Documents/Certificate/root_key.pem
+```
 ## Install Foundry
 ### To download and install Foundry, follow these steps:
 ```shell

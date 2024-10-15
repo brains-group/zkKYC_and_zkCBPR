@@ -1,0 +1,7 @@
+{
+    "DID": "did:kyc:245466ccd1f4c67de35c99d7fdc528bcc636b23aa8b6b6e71af0885908a34896",
+    "Transaction Amount": "-500",
+    "Finished_Date": "2024-09-09",
+    "Debtor_Bank": "BankA",
+    "Creditor_Bank": "BankB"
+}

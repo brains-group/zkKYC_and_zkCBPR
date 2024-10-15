@@ -1,0 +1,102 @@
+{"abi":
+[
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "senderBank",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "recipientBank",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "note",
+				"type": "string"
+			}
+		],
+		"name": "TransferConfirmed",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "senderBank",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "recipientBank",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "note",
+				"type": "string"
+			}
+		],
+		"name": "TransferInitiated",
+		"type": "event"
+	},
+	{
+		"inputs": [],
+		"name": "centralBank",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "recipientBank",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "note",
+				"type": "string"
+			}
+		],
+		"name": "initiatePayment",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	}
+]
+}

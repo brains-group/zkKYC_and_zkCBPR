@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "did-jwt": "^8.0.4",
+    "did-resolver": "^4.1.0",
+    "elliptic": "^6.5.5"
+  }
+}

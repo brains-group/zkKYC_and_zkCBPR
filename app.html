@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Six Party Interaction</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .section {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .party {
+      flex: 1;
+      padding: 20px;
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .party h3 {
+      margin-top: 0;
+      font-size: 1.2em;
+    }
+    .form-section input,
+    .form-section button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .form-section {
+      padding: 25px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      background-color: #fff;
+    }
+    .form-section input {
+      margin-bottom: 15px;
+    }
+    .form-section button {
+      margin-top: 15px;
+    }
+    .party p {
+      margin-top: 10px;
+      font-size: 0.9em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Wallet KYC Section -->
+    <h2>Wallet KYC Section</h2>
+    <div class="section">
+      <!-- CA Section -->
+      <div class="party">
+        <h3>CA (Certification Authority)</h3>
+        <div class="form-section">
+          <form id="caForm">
+            <label for="caRealName">Real Name:</label>
+            <input type="text" id="caRealName" placeholder="Enter Real Name">
+
+            <label for="caRealID">Real ID:</label>
+            <input type="text" id="caRealID" placeholder="Enter Real ID">
+
+            <label for="caAdditionalInfo">Additional Info:</label>
+            <input type="text" id="caAdditionalInfo" placeholder="Enter Additional Info">
+
+            <button type="submit">Generate DID</button>
+          </form>
+        </div>
+        <p id="ca-output"></p>
+
+        <div class="form-section">
+          <form id="registerDidForm">
+            <label for="did">DID:</label>
+            <input type="text" id="did" placeholder="Enter DID">
+            <button type="submit">Register DID</button>
+          </form>
+        </div>
+        <p id="registerDidOutput"></p> 
+
+        <div class="form-section">
+          <form id="addIntermediateForm">
+            <label for="intermediateAddress">Intermediate Address:</label>
+            <input type="text" id="intermediateAddress" placeholder="Enter Intermediate Address">
+            <button type="submit">Add Intermediate</button>
+          </form>
+        </div>
+        <p id="addIntermediate"></p>
+      </div>
+
+      <!-- Intermediate Section -->
+      <div class="party">
+        <h3>Intermediate Entity</h3>
+        <button id="decodeCSRButton" disabled>Decode CSR</button>
+        <p id="decodeOutput"></p>
+
+        <button id="signCSRButton" disabled>Sign CSR</button>
+        <p id="signOutput"></p>
+
+        <button id="generateProofButton">Generate Merkle Tree Proof</button>
+        <p id="proofOutput"></p>
+
+        <button id="generateMerkleButton">Generate Merkle Tree Root</button>
+        <p id="merkleOutput"></p>
+
+        <div class="form-section">
+          <form id="updateMerkleForm">
+            <label for="didInput">DID:</label>
+            <input type="text" id="didInput" placeholder="Enter DID">
+            
+            <label for="merkleRootInput">New Merkle Tree Root:</label>
+            <input type="text" id="merkleRootInput" placeholder="Enter New Merkle Root">
+            
+            <button type="submit">Update Merkle Tree Root</button>
+          </form>
+        </div>
+        <p id="updateMerkleOutput"></p>
+
+        <div class="form-section">
+          <form id="getMerkleRootForm">
+            <label for="didForMerkle">Enter DID:</label>
+            <input type="text" id="didForMerkle" placeholder="Enter DID">
+            <button type="submit">Get Merkle Tree Root</button>
+          </form>
+        </div>
+        <p id="merkleRootOutput"></p>
+
+        <button id="updateTransactionButton">Update Transaction</button>
+        <p id="updateTransactionOutput"></p>
+      </div>
+
+      <!-- User Section -->
+      <div class="party">
+        <h3>User</h3>
+        <div class="form-section">
+          <form id="csrForm">
+            <label for="debtorDID">Debtor DID:</label><br>
+            <input type="text" id="debtorDID" placeholder="Enter Debtor DID"><br><br>
+          
+            <label for="debtorBank">Debtor Bank:</label><br>
+            <input type="text" id="debtorBank" placeholder="Enter Debtor Bank"><br><br>
+          
+            <label for="debtorWalletAddresses">Debtor Wallet Addresses (comma-separated):</label><br>
+            <input type="text" id="debtorWalletAddresses" placeholder="Enter Debtor Wallet Addresses"><br><br>
+          
+            <label for="transactionWalletAddress">Transaction Wallet Address:</label><br>
+            <input type="text" id="transactionWalletAddress" placeholder="Enter Transaction Wallet Address"><br><br>
+          
+            <label for="creditorBank">Creditor Bank:</label><br>
+            <input type="text" id="creditorBank" placeholder="Enter Creditor Bank"><br><br>
+          
+            <button type="submit">Generate CSR</button>
+          </form>
+        </div>
+        <p id="csrOutput"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- ZK Transaction Section -->
+    <h2>ZK Transaction Section</h2>
+    <div class="section">
+      <!-- Debtor Bank Section -->
+      <div class="party">
+        <h3>Debtor Bank</h3>
+        <button id="debtorBalanceButton">Get Balance</button>
+        <p id="debtorBalanceOutput"></p>
+
+        <div class="form-section">
+          <form id="generatesignatureproof">
+            <label for="TranctionAmount">Transaction Amount:</label>
+            <input type="text" id="TranctionAmountInput" placeholder="Enter transaction amount">
+            
+            <label for="TotalAsset">Total Asset:</label>
+            <input type="text" id="TotalAssetInput" placeholder="Enter total asset">
+      
+            <label for="PrivateKey">Debtor Bank Private Key:</label>
+            <input type="text" id="PrivateKeyInput" placeholder="Enter private key">
+            
+            <button type="submit">Generate ZKP</button>
+          </form>
+        </div>
+        <p id="signatureproof"></p>
+
+        <div class="form-section">
+          <form id="debtorTransferForm">
+            <label for="recipientBankAddress">Recipient Bank Address:</label>
+            <input type="text" id="recipientBankAddress" placeholder="Enter recipient bank address">
+      
+            <label for="paymentAmount">Payment Amount (ETH):</label>
+            <input type="text" id="paymentAmount" placeholder="Enter payment amount">
+      
+            <label for="note">Note:</label>
+            <input type="text" id="note" placeholder="Enter a note for the payment">
+      
+            <button type="submit">Initiate Transfer</button>
+          </form>
+        </div>
+        <p id="debtorTransferOutput"></p>
+
+        <div class="form-section">
+          <form id="transactionForm">
+            <label for="did_debtor">DID:</label>
+            <input type="text" id="did_debtor" placeholder="Enter DID">
+            
+            <label for="transactionAmount">Transaction Amount:</label>
+            <input type="text" id="transactionAmount" placeholder="Enter Transaction Amount">
+            
+            <label for="finishedDate">Finished Date:</label>
+            <input type="text" id="finishedDate" placeholder="Enter Finished Date">
+            
+            <label for="d_bank">Debtor Bank:</label>
+            <input type="text" id="d_bank" placeholder="Enter Debtor Bank">
+            
+            <label for="c_bank">Creditor Bank:</label>
+            <input type="text" id="c_bank" placeholder="Enter Creditor Bank">
+            
+            <button type="submit">Send Transaction Info</button>
+          </form>
+        </div>
+        <p id="transactionOutput"></p>
+        
+      </div>
+
+      <!-- Intermediary Bank Section -->
+      <div class="party">
+        <h3>Intermediary Bank</h3>
+        <button id="intermediaryBalanceButton">Get Balance</button>
+        <p id="intermediaryBalanceOutput"></p>
+
+        <button id="checkFilesButton">Check Files</button>
+        <p id="checkFilesOutput"></p>
+
+        <button id="verifyProofsButton">Verify Proofs and Certificate</button>
+        <p id="verificationOutput"></p>
+
+        <div class="form-section">
+          <form id="intermediaryTransferForm">
+            <label for="recipientBankAddress">Recipient Bank Address:</label>
+            <input type="text" id="recipientBankAddress2" placeholder="Enter recipient bank address">
+      
+            <label for="paymentAmount">Payment Amount (ETH):</label>
+            <input type="text" id="paymentAmount2" placeholder="Enter payment amount">
+      
+            <label for="note">Note:</label>
+            <input type="text" id="note2" placeholder="Enter a note for the payment">
+      
+            <button type="submit">Initiate Transfer</button>
+          </form>
+        </div>
+        <p id="intermediaryTransferOutput"></p>
+      </div>
+
+      <!-- Creditor Bank Section -->
+      <div class="party">
+        <h3>Creditor Bank</h3>
+        <button id="creditorBalanceButton">Get Balance</button>
+        <p id="creditorBalanceOutput"></p>
+
+        <div class="form-section">
+          <form id="transactionForm2">
+            <label for="did">DID:</label>
+            <input type="text" id="did4" placeholder="Enter DID">
+            
+            <label for="transactionAmount">Transaction Amount:</label>
+            <input type="text" id="transactionAmount4" placeholder="Enter Transaction Amount">
+            
+            <label for="finishedDate">Finished Date:</label>
+            <input type="text" id="finishedDate4" placeholder="Enter Finished Date">
+            
+            <label for="debtorbank">Debtor Bank:</label>
+            <input type="text" id="debtorbank4" placeholder="Enter Bank">
+            
+            <label for="creditorBank">Creditor Bank:</label>
+            <input type="text" id="creditorBank4" placeholder="Enter Creditor Bank">
+            
+            <button type="submit">Send Transaction Info</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Handle CA DID generation form submission
+    document.getElementById('caForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const realName = document.getElementById('caRealName').value;
+      const realID = document.getElementById('caRealID').value;
+      const additionalInfo = document.getElementById('caAdditionalInfo').value;
+
+      fetch('/generate-did', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ realName, realID, additionalInfo })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('ca-output').innerText = `Generated DID: ${data.did}`;
+      })
+      .catch(err => {
+        document.getElementById('ca-output').innerText = `Error: ${err.message}`;
+      });
+    });
+
+    // Handle DID registration
+    document.getElementById('registerDidForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const did = document.getElementById('did').value;
+
+      fetch('/register-did', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ did })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('registerDidOutput').innerText = `Registered DID Tx Hash: ${data.txHash}`;
+      })
+      .catch(err => {
+        document.getElementById('registerDidOutput').innerText = `Error: ${err.message}`;
+      });
+    });
+
+    // Handle Add Intermediate form submission
+    document.getElementById('addIntermediateForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const intermediateAddress = document.getElementById('intermediateAddress').value;
+
+      fetch('/add-intermediate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ intermediateAddress })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('addIntermediate').innerText = `Added Intermediate Tx Hash: ${data.txHash}`;
+      })
+      .catch(err => {
+        document.getElementById('addIntermediate').innerText = `Error: ${err.message}`;
+      });
+    });
+
+    // Handle CSR Upload from User
+  document.getElementById('csrForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Collecting inputs for CSR generation
+    const debtor_DID = document.getElementById('debtorDID').value;
+    const debtor_bank = document.getElementById('debtorBank').value;
+    const debtor_wallet_addresses = document.getElementById('debtorWalletAddresses').value; // Comma-separated list
+    const transaction_wallet_address = document.getElementById('transactionWalletAddress').value;
+    const creditor_bank = document.getElementById('creditorBank').value;
+
+    // Send CSR data to backend
+    fetch('/generate-csr', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ debtor_DID, debtor_bank, debtor_wallet_addresses, transaction_wallet_address, creditor_bank })
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('csrOutput').innerText = `${data.message}`;
+      generatedCSRPath = data.filePath; // Store the generated CSR path
+      document.getElementById('decodeCSRButton').disabled = false; // Enable decode button
+    })
+    .catch(err => {
+      document.getElementById('csrOutput').innerText = `Error: ${err.message}`;
+    });
+  });
+
+  // Handle Decode CSR
+  document.getElementById('decodeCSRButton').addEventListener('click', function() {
+    fetch('/decode-csr', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      // 显示解码后的 CSR 信息
+      document.getElementById('decodeOutput').innerText = `Transaction Info: ${JSON.stringify(data.decodedInfo, null, 2)}`;
+      
+      // 解码成功后启用签名按钮
+      document.getElementById('signCSRButton').disabled = false;
+    })
+    .catch(err => {
+      document.getElementById('decodeOutput').innerText = `解码失败: ${err.message}`;
+    });
+  });
+
+    // 处理签名 CSR
+document.getElementById('signCSRButton').addEventListener('click', function() {
+  fetch('/sign-csr', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ csrPath: generatedCSRPath }) // 将 CSR 的路径发送到后端
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('signOutput').innerText = `Signed Certificate: ${data.signedCSR}`;
+  })
+  .catch(err => {
+    document.getElementById('signOutput').innerText = `Error: ${err.message}`;
+  });
+});
+
+document.getElementById('generateProofButton').addEventListener('click', function() {
+  document.getElementById('proofOutput').innerText = "The ceremony contribution will take 5-7 minutes. The proof already exists.";
+});
+
+// Handle Generate Merkle Tree Root
+document.getElementById('generateMerkleButton').addEventListener('click', function() {
+  fetch('/generate-merkle-root', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ did: 'did:example:123456789' }) // Replace with dynamic DID if necessary
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('merkleOutput').innerText = `Merkle tree root: ${data.merkleRoot}`;
+  })
+  .catch(err => {
+    document.getElementById('merkleOutput').innerText = `Error: ${err.message}`;
+  });
+});
+
+document.getElementById('updateMerkleForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const did = document.getElementById('didInput').value;
+  const newMerkleRoot = document.getElementById('merkleRootInput').value;
+
+  fetch('/update-merkle-root', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ did, newMerkleRoot })
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('updateMerkleOutput').innerText = `Merkle Tree root updated successfully. Tx Hash: ${data.txHash}`;
+  })
+  .catch(err => {
+    document.getElementById('updateMerkleOutput').innerText = `Error: ${err.message}`;
+  });
+});
+
+document.getElementById('getMerkleRootForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const did = document.getElementById('didForMerkle').value;
+
+  fetch('/get-merkle-root', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ did })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('merkleRootOutput').innerText = `Merkle Tree Root for DID: ${data.merkleRoot}`;
+    } else {
+      document.getElementById('merkleRootOutput').innerText = `Error: ${data.error}`;
+    }
+  })
+  .catch(err => {
+    document.getElementById('merkleRootOutput').innerText = `Error: ${err.message}`;
+  });
+});
+ 
+document.getElementById('debtorBalanceButton').addEventListener('click', function() {
+  fetch('/get-debtor-balance')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('debtorBalanceOutput').innerText = `Debtor Bank Balance: ${data.balance} ETH`;
+    })
+    .catch(err => {
+      document.getElementById('debtorBalanceOutput').innerText = `Error fetching balance: ${err.message}`;
+    });
+});
+
+document.getElementById('intermediaryBalanceButton').addEventListener('click', function() {
+  fetch('/get-intermediary-balance')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('intermediaryBalanceOutput').innerText = `Intermediary Bank Balance: ${data.balance} ETH`;
+    })
+    .catch(err => {
+      document.getElementById('intermediaryBalanceOutput').innerText = `Error fetching balance: ${err.message}`;
+    });
+});
+
+document.getElementById('creditorBalanceButton').addEventListener('click', function() {
+  fetch('/get-creditor-balance')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('creditorBalanceOutput').innerText = `Creditor Bank Balance: ${data.balance} ETH`;
+    })
+    .catch(err => {
+      document.getElementById('creditorBalanceOutput').innerText = `Error fetching balance: ${err.message}`;
+    });
+});
+
+document.getElementById('generatesignatureproof').addEventListener('submit', function(event) {
+ event.preventDefault();
+  
+  // Capture inputs
+  const transactionAmount = document.getElementById('TranctionAmountInput').value;
+  const totalAsset = document.getElementById('TotalAssetInput').value;
+  const privateKey = document.getElementById('PrivateKeyInput').value;
+
+  // Send the data to the backend
+  fetch('/generate-zkp', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ transactionAmount, totalAsset, privateKey })
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('signatureproof').innerText = data.message;
+  })
+  .catch(err => {
+    document.getElementById('signatureproof').innerText = `Error: ${err.message}`;
+  });
+});
+
+document.getElementById('debtorTransferForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const recipientBankAddress = document.getElementById('recipientBankAddress').value;
+  const paymentAmount = document.getElementById('paymentAmount').value;
+  const note = document.getElementById('note').value;
+
+  // Send the data to the backend
+  fetch('/debtor-transfer', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ recipientBankAddress, paymentAmount, note })
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('debtorTransferOutput').innerText = `Transfer Initiated: ${data.txHash}`;
+  })
+  .catch(err => {
+    document.getElementById('debtorTransferOutput').innerText = `Error: ${err.message}`;
+  });
+});
+
+document.getElementById('intermediaryTransferForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const recipientBankAddress = document.getElementById('recipientBankAddress2').value;
+  const paymentAmount = document.getElementById('paymentAmount2').value;
+  const note = document.getElementById('note2').value;
+
+  // Send the data to the backend
+  fetch('/intermediary-transfer', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ recipientBankAddress, paymentAmount, note })
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('intermediaryTransferOutput').innerText = `Transfer Initiated: ${data.txHash}`;
+  })
+  .catch(err => {
+    document.getElementById('intermediaryTransferOutput').innerText = `Error: ${err.message}`;
+  });
+});
+
+document.getElementById('checkFilesButton').addEventListener('click', function() {
+  fetch('/check-files', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById('checkFilesOutput').innerText = "All required verification files are present.";
+    } else {
+      document.getElementById('checkFilesOutput').innerText = `Missing files: ${data.missingFiles.join(', ')}`;
+    }
+  })
+  .catch(err => {
+    document.getElementById('checkFilesOutput').innerText = `Error: ${err.message}`;
+  });
+});
+
+document.getElementById('verifyProofsButton').addEventListener('click', function() {
+  fetch('/verify-proofs', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      }
+  })
+  .then(response => response.json())
+  .then(data => {
+      document.getElementById('verificationOutput').innerText = data.message;
+  })
+  .catch(err => {
+      document.getElementById('verificationOutput').innerText = `Error: ${err.message}`;
+  });
+});
+
+document.getElementById('transactionForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const did_debtor = document.getElementById('did_debtor').value;
+  const transactionAmount = document.getElementById('transactionAmount').value;
+  const finishedDate = document.getElementById('finishedDate').value;
+  const d_bank = document.getElementById('d_bank').value;
+  const c_bank = document.getElementById('c_bank').value;
+
+  // Check if all fields have values
+  console.log("Values before sending:", { did_debtor, transactionAmount, finishedDate, d_bank, c_bank });
+
+  const transactionData = {
+    "did_debtor": did_debtor,
+    "transactionAmount": transactionAmount,
+    "finishedDate": finishedDate,
+    "d_bank": d_bank,
+    "c_bank": c_bank
+  };
+
+  fetch('/create-transaction', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(transactionData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('transactionOutput').innerText = 'Transaction saved successfully!';
+  })
+  .catch(err => {
+    document.getElementById('transactionOutput').innerText = `Error: ${err.message}`;
+  });
+});
+
+
+document.getElementById('updateTransactionButton').addEventListener('click', function() {
+  fetch('/update-transaction', {
+    method: 'POST'
+  })
+  .then(response => response.json())
+  .then(data => {
+    document.getElementById('updateTransactionOutput').innerText = 'Transaction updated successfully!';
+  })
+  .catch(err => {
+    document.getElementById('updateTransactionOutput').innerText = `Error: ${err.message}`;
+  });
+});
+
+</script>
+</body>
+</html>

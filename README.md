@@ -95,4 +95,4 @@ $ node server.js
 This will start the server that communicates with your smart contracts and zkKYC/zkCBPR systems.
 
 ## Launch the Application
-Once the server is running, open the app.html file in your browser to begin interacting with the zkKYC and zkCBPR processes.
+Once the server is running, open the app.html , https://Your_local_host_server/app.html in your browser to begin interacting with the zkKYC and zkCBPR processes.

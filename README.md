@@ -29,6 +29,7 @@ Before proceeding, update the file paths in the following files:
 - `test/update_transaction.js`
 - `all the python file in Certificate folder`
 - `Merkle_tree/merkleTree.js`
+- `Signature/Debtor_Signature.js`
 
 for example:
 Replace the `....` in the path 

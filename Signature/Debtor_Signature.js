@@ -51,7 +51,7 @@ async function main() {
       };
 
       // Write the input JSON object to a file
-    const filePath = path.join('/Users/kaiyang/Documents/kyc/Circuits/Debtor_Bank_zkp', 'input.json');
+    const filePath = path.join('/..../Circuits/Debtor_Bank_zkp', 'input.json');
     fs.writeFileSync(filePath, JSON.stringify(input, null, 2));
 
       rl.close();

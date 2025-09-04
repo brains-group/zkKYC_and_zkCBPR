@@ -19,9 +19,9 @@ For detailed documentation, please refer to: https://book.getfoundry.sh/
 
 ---
 
-## Running zkKYC and zkCBPR
+# Running zkKYC and zkCBPR
 
-### Update File Paths
+## Update File Paths
 
 Before proceeding, update the file paths in the following files:
 
@@ -96,3 +96,13 @@ This will start the server that communicates with your smart contracts and zkKYC
 
 ## Launch the Application
 Once the server is running, open the app.html , https://Your_local_host_server/app.html in your browser to begin interacting with the zkKYC and zkCBPR processes.
+
+## Demo:
+This is the demo for zkKYC/zkCBPR:
+https://drive.google.com/file/d/1j6l9KlJQsKt5aF68kua3qJ39AhhXD_SJ/view?usp=drive_link
+
+## Experiment of Other Dencentralized Verification:
+View the full experiment documentation here:  
+**[`experiment/README.md`](https://github.com/2281469043/zkKYC_and_zkCBPR/tree/main/Experiment)*
+
+

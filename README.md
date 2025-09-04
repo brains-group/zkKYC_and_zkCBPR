@@ -6,12 +6,11 @@ This README provides detailed steps to set up and simulate zkKYC and zkCBPR usin
 
 **Foundry is a blazing fast, portable, and modular toolkit for Ethereum application development written in Rust.**
 
-Foundry consists of:
+Foundry consists of (we need to use):
 
 -   **Forge**: Ethereum testing framework (like Truffle, Hardhat, and DappTools).
 -   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions, and getting chain data.
 -   **Anvil**: Local Ethereum node, akin to Ganache or Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose Solidity REPL.
 
 ## Documentation
 

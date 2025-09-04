@@ -103,6 +103,6 @@ https://drive.google.com/file/d/1j6l9KlJQsKt5aF68kua3qJ39AhhXD_SJ/view?usp=drive
 
 ## Experiment of Other Dencentralized Verification:
 View the full experiment documentation here:  
-**[`experiment/README.md`](https://github.com/2281469043/zkKYC_and_zkCBPR/tree/main/Experiment)*
+**[`experiment/README.md`]([https://github.com/2281469043/zkKYC_and_zkCBPR/tree/main/Experiment](https://github.com/brains-group/zkKYC_and_zkCBPR/blob/main/Experiment/README.md))*
 
 
